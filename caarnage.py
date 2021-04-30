@@ -22,6 +22,7 @@ from reportlab.lib.units import inch
 
 import hashlib
 import os
+import PIL
 
 '''Add links and then generate a PDF'''
 class Assessment:
@@ -59,8 +60,17 @@ class Assessment:
 
         print("Getting %s" % url)
         self._browser.get(url)
-        print("  Saving to %s" % screenshotFilename)
-        success = self._browser.save_screenshot(screenshotFilename)
+
+        pngFilename = self.screenshotBasenameForURL(url) + '.png'
+        print("  Saving to %s" % pngFilename)
+        success = self._browser.save_screenshot(pngFilename)
+
+        if success:
+            print("  Converting to jpg")
+            im = PIL.Image.open(pngFilename)
+            im.convert('RGB').save(screenshotFilename)
+            os.remove(pngFilename)
+
         return success
 
     def getAllScreenshots(self, useCached = True):
@@ -153,8 +163,11 @@ class Assessment:
     def hashForURL(self, url):
         return hashlib.md5(url.encode('utf-8')).hexdigest()
 
+    def screenshotBasenameForURL(self, url):
+        return os.path.join(self.screenshotDirectory, self.hashForURL(url))
+
     def screenshotFilenameForURL(self, url):
-        return os.path.join(self.screenshotDirectory, self.hashForURL(url) + ".png")
+        return self.screenshotBasenameForURL(url) + '.jpg'
 
     def fileHasData(self, filename):
         return os.path.isfile(filename) and os.path.getsize(filename) > 0
