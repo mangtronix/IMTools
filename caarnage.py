@@ -41,6 +41,10 @@ class Assessment:
         self.reportPageHeight = reportlab.rl_config.defaultPageSize[0]
         self.reportPageWidth = reportlab.rl_config.defaultPageSize[1]
 
+        self.screenshotDirectory = 'screenshots'
+        if not os.path.isdir(self.screenshotDirectory):
+            os.mkdir(self.screenshotDirectory)
+
 
     def initBrowser(self):
         if self._browser is not None:
@@ -143,7 +147,7 @@ class Assessment:
         return hashlib.md5(url.encode('utf-8')).hexdigest()
 
     def screenshotFilenameForURL(self, url):
-        return self.hashForURL(url) + ".png"
+        return os.path.join(self.screenshotDirectory, self.hashForURL(url) + ".png")
 
     def fileHasData(self, filename):
         return os.path.isfile(filename) and os.path.getsize(filename) > 0
