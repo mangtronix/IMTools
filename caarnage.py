@@ -20,6 +20,8 @@ import reportlab.rl_config, reportlab.lib.styles
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
 from reportlab.lib.units import inch
 
+import hashlib
+
 '''Add links and then generate a PDF'''
 class Assessment:
 
@@ -56,6 +58,12 @@ class Assessment:
         success = self._browser.save_screenshot(screenshotFilename)
         return success
 
+    def getAllScreenshots(self):
+        '''Retrieve screenshots for all links'''
+        for url in self.highLinks + self.mediumLinks + self.lowLinks:
+            self.makeScreenshot(url, self.screenshotFilenameForURL(url))
+
+
     def quitBrowser(self):
         if self._browser is not None:
             self._browser.quit()
@@ -69,22 +77,27 @@ class Assessment:
         doc = SimpleDocTemplate(self.reportFilename)
         Story = [Spacer(1,2*inch)]
         style = reportlab.lib.styles.getSampleStyleSheet()["Normal"]
-        for i in range(10):
-            print("Adding link %d" % i)
-            bogustext = ("Paragraph number %s. " % i)
-            p = Paragraph(bogustext, style)
-            Story.append(p)
-            Story.append(Spacer(1,0.2*inch))
 
-            if i % 2 == 0:
-                imageFilename = 'screenshot.png'
-            else:
-                imageFilename = 'screenshot2.png'
+        sections = [
+            ["High Achievement Examples", self.highLinks],
+            ["Medium Achievement Examples", self.mediumLinks],
+            ["Low Achievement Examples", self.lowLinks]
+        ]
 
+        for description,links in sections:
+            p = Paragraph(description, style)
 
-            image = Image(imageFilename)
-            image._restrictSize(6 * inch, 4 * inch)
-            Story.append(image)
+            for link in links:
+                print("Adding link %s" % link)
+                text = ("URL: %s. " % link)
+                p = Paragraph(text, style)
+                Story.append(p)
+                Story.append(Spacer(1,0.2*inch))
+
+                imageFilename = self.screenshotFilenameForURL(link)
+                image = Image(imageFilename)
+                image._restrictSize(6 * inch, 4 * inch)
+                Story.append(image)
 
         print("  Building report")
         doc.build(Story,
@@ -108,12 +121,12 @@ class Assessment:
 
 
 
+    ### Utility functions ###
+    def hashForURL(self, url):
+        return hashlib.md5(url.encode('utf-8')).hexdigest()
 
-
-
-
-
-
+    def screenshotFilenameForURL(self, url):
+        return self.hashForURL(url) + ".png"
 
 
 
@@ -130,10 +143,19 @@ def testReport():
     assessment.buildReport()
     assessment.shutdown()
 
+def testSmallReport():
+    print("Testing small report")
+    assessment = Assessment()
+    assessment.reportFilename = 'smallreport.pdf'
+    assessment.highLinks.append('https://lucychoi1215.github.io/actors.html')
+    assessment.getAllScreenshots()
+    assessment.buildReport()
+    assessment.shutdown()
 
 def test():
     #testScreenshot()
-    testReport()
+    #testReport()
+    testSmallReport()
 
 if __name__ == "__main__":
     test()
