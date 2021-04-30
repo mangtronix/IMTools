@@ -39,6 +39,7 @@ class Assessment:
         self.lowLinks = []
 
         self._browser = None
+        self._browserWaitTime = 10 # Implicit wait
         self.screenshotWidth = 1920
         self.screenshotHeight = 1200
 
@@ -64,6 +65,7 @@ class Assessment:
         opts.add_argument("--width=%d" % self.screenshotWidth)
         opts.add_argument("--height=%d" % self.screenshotHeight)
         self._browser = webdriver.Firefox(options = opts)
+        self._browser.implicitly_wait(self._browserWaitTime)
 
     def updateFromConfig(self, yamlFilename):
         with open(yamlFilename) as file:
