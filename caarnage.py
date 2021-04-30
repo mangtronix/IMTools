@@ -96,6 +96,13 @@ class Assessment:
             ["Low Achievement Examples", self.lowLinks]
         ]
 
+        p = Paragraph(self.title, headingStyle)
+        Story.append(p)
+        p = Paragraph(self.description, normalStyle)
+        Story.append(p)
+        Story.append(PageBreak())
+
+
         for description,links in sections:
             if len(links) < 1:
                 print("  No links in section: %s" % description)
@@ -120,18 +127,18 @@ class Assessment:
 
         print("  Building report")
         doc.build(Story,
-                    onFirstPage=self.reportTitlePage,
+                    onFirstPage=self.reportPage,
                     onLaterPages=self.reportPage)
         print("  Saved report to %s" % self.reportFilename)
 
-    def reportTitlePage(self, canvas, doc):
-        print("Making title page")
-        canvas.saveState()
-        canvas.setFont('Times-Bold',16)
-        canvas.drawCentredString(self.reportPageWidth/2.0, self.reportPageHeight-108, self.title)
-        canvas.setFont('Times-Roman',9)
-        canvas.drawString(inch, 0.75 * inch,"Page %d" % (doc.page))
-        canvas.restoreState()
+    # def reportTitlePage(self, canvas, doc):
+    #     print("Making title page")
+    #     canvas.saveState()
+    #     canvas.setFont('Times-Bold',16)
+    #     canvas.drawCentredString(self.reportPageWidth/2.0, self.reportPageHeight-108, self.title)
+    #     canvas.setFont('Times-Roman',9)
+    #     canvas.drawString(inch, 0.75 * inch,"Page %d" % (doc.page))
+    #     canvas.restoreState()
 
     def reportPage(self, canvas, doc):
         print("Making page %d" % doc.page)
