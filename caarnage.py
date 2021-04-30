@@ -23,6 +23,7 @@ from reportlab.lib.units import inch
 import hashlib
 import os
 import PIL
+import yaml
 
 '''Add links and then generate a PDF'''
 class Assessment:
@@ -46,13 +47,44 @@ class Assessment:
         if not os.path.isdir(self.screenshotDirectory):
             os.mkdir(self.screenshotDirectory)
 
-
     def initBrowser(self):
         if self._browser is not None:
             self._browser.quit()
 
         print("Initializing browser")
         self._browser = webdriver.Firefox()
+
+    def updateFromConfig(self, yamlFilename):
+        with open(yamlFilename) as file:
+            documents = yaml.full_load(file)
+
+        for item, doc in documents.items():
+            if item == 'title':
+                self.title = doc
+            elif item == 'description':
+                self.description = doc
+            elif item == 'filename':
+                self.reportFilename = doc
+            elif item == 'high':
+                self.highLinks = doc
+            elif item == 'medium':
+                self.mediumLinks = doc
+            elif item == 'low':
+                self.lowLinks = doc
+
+    def printConfig(self):
+        print("Title: " + self.title)
+        print("Description: " + self.description)
+        print("Filename: " + self.reportFilename)
+        print("High Achievement URLs:")
+        for url in self.highLinks:
+            print("  %s" % url)
+        print("Medium Achievement URLs:")
+        for url in self.mediumLinks:
+            print("  %s" % url)
+        print("Low Achievement URLs:")
+        for url in self.lowLinks:
+            print("  %s" % url)
 
     def makeScreenshot(self, url, screenshotFilename):
         if self._browser is None:
@@ -224,11 +256,20 @@ def testMediumReport():
     assessment.buildReport()
     assessment.shutdown()
 
+def testConfig():
+    assessment = Assessment()
+    assessment.updateFromConfig('example.yaml')
+    assessment.printConfig()
+    assessment.getAllScreenshots()
+    assessment.buildReport()
+    assessment.shutdown()
+
 def test():
     #testScreenshot()
     #testReport()
     #testSmallReport()
-    testMediumReport()
+    #testMediumReport()
+    testConfig()
 
 if __name__ == "__main__":
     test()
