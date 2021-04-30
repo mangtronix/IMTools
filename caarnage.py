@@ -17,10 +17,11 @@ from selenium import webdriver
 
 import reportlab
 import reportlab.rl_config, reportlab.lib.styles
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, PageBreak
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, PageBreak, KeepTogether
 from reportlab.lib.units import inch
 
 import hashlib
+import os
 
 '''Add links and then generate a PDF'''
 class Assessment:
@@ -58,9 +59,15 @@ class Assessment:
         success = self._browser.save_screenshot(screenshotFilename)
         return success
 
-    def getAllScreenshots(self):
+    def getAllScreenshots(self, useCached = True):
         '''Retrieve screenshots for all links'''
+        print("Getting screenshots")
         for url in self.highLinks + self.mediumLinks + self.lowLinks:
+            filename = self.screenshotFilenameForURL(url)
+            if useCached:
+                if self.fileHasData(filename):
+                    print("  Already have screenshot for %s, skipping"  % url)
+                    continue
             self.makeScreenshot(url, self.screenshotFilenameForURL(url))
 
 
@@ -95,15 +102,15 @@ class Assessment:
 
             for link in links:
                 print("Adding link %s" % link)
-                text = ("URL: %s. " % link)
+                text = ("URL: %s " % link)
                 p = Paragraph(text, normalStyle)
-                Story.append(p)
-                Story.append(Spacer(1,0.2*inch))
 
                 imageFilename = self.screenshotFilenameForURL(link)
                 image = Image(imageFilename)
                 image._restrictSize(6 * inch, 4 * inch)
-                Story.append(image)
+
+                Story.append(KeepTogether([p, image]))
+                Story.append(Spacer(1,0.2*inch))
 
             Story.append(PageBreak())
 
@@ -137,6 +144,9 @@ class Assessment:
 
     def screenshotFilenameForURL(self, url):
         return self.hashForURL(url) + ".png"
+
+    def fileHasData(self, filename):
+        return os.path.isfile(filename) and os.path.getsize(filename) > 0
 
 
 
