@@ -17,7 +17,7 @@ from selenium import webdriver
 
 import reportlab
 import reportlab.rl_config, reportlab.lib.styles
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, PageBreak
 from reportlab.lib.units import inch
 
 import hashlib
@@ -105,6 +105,8 @@ class Assessment:
                 image._restrictSize(6 * inch, 4 * inch)
                 Story.append(image)
 
+            Story.append(PageBreak())
+
         print("  Building report")
         doc.build(Story,
                     onFirstPage=self.reportTitlePage,
@@ -160,10 +162,24 @@ def testSmallReport():
     assessment.buildReport()
     assessment.shutdown()
 
+def testMediumReport():
+    print("Testing medium report")
+    assessment = Assessment()
+    assessment.reportFilename = 'mediumreport.pdf'
+    assessment.highLinks.append('https://lucychoi1215.github.io/')
+    assessment.highLinks.append('https://lucychoi1215.github.io/actors.html')
+    assessment.mediumLinks.append('https://tobbi74.github.io/')
+    assessment.lowLinks.append('http://zharmakhan-zn.github.io/')
+
+    assessment.getAllScreenshots()
+    assessment.buildReport()
+    assessment.shutdown()
+
 def test():
     #testScreenshot()
     #testReport()
-    testSmallReport()
+    #testSmallReport()
+    testMediumReport()
 
 if __name__ == "__main__":
     test()
