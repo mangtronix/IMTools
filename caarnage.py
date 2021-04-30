@@ -21,14 +21,16 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Page
 from reportlab.lib.units import inch
 
 import hashlib
-import os
+import os, sys
 import PIL
 import yaml
+
+from optparse import OptionParser
 
 '''Add links and then generate a PDF'''
 class Assessment:
 
-    def __init__(self):
+    def __init__(self, yamlConfigFilename = None):
         self.title = 'Assessment'
         self.description = 'Assessment description'
 
@@ -44,6 +46,10 @@ class Assessment:
         self.reportPageWidth = reportlab.rl_config.defaultPageSize[1]
 
         self.screenshotDirectory = 'screenshots'
+
+        if yamlConfigFilename is not None:
+            self.updateFromConfig(yamlConfigFilename)
+
         if not os.path.isdir(self.screenshotDirectory):
             os.mkdir(self.screenshotDirectory)
 
@@ -204,8 +210,33 @@ class Assessment:
     def fileHasData(self, filename):
         return os.path.isfile(filename) and os.path.getsize(filename) > 0
 
+    def doItAll(self):
+        self.printConfig()
+        self.getAllScreenshots()
+        self.quitBrowser()
+        self.buildReport()
+        self.shutdown()
 
 
+##### COMMAND LINE
+def go():
+    parser = OptionParser()
+    parser.add_option("-c", "--config", dest="config",
+                      help="Configuration file", default='config.yaml')
+    (options, args) = parser.parse_args()
+
+    printHelp()
+
+    assessment = Assessment(options.config)
+    assessment.doItAll()
+
+def printHelp():
+    print("caarnage.py -c config.yml")
+    print()
+    print("Edit the default config file config.yml to set the report options")
+
+
+##### TESTING
 
 def testScreenshot():
     print("Testing screenshot")
@@ -272,4 +303,4 @@ def test():
     testConfig()
 
 if __name__ == "__main__":
-    test()
+    go()

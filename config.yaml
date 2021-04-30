@@ -1,0 +1,19 @@
+# Information for cover page
+title: Assessment 1 - Webpage Assignment
+description: Examples of the submitted webpages follow
+
+# Output filename
+filename: assessment1.pdf
+
+# List of high achivement URLs
+high:
+  - https://lucychoi1215.github.io/
+  - https://yegormos.github.io/index.html
+
+# Medium achievement URLs
+medium:
+  - https://github.com/NYUAD-IM/Software-Art-Image/tree/main/code/velocity
+
+# Low achievement URls
+low:
+  - https://github.com/NYUAD-IM/Software-Art-Image/tree/main/code/simpletimeline
