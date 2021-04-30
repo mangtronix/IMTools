@@ -173,7 +173,8 @@ class Assessment:
 
             for link in links:
                 print("Adding link %s" % link)
-                text = ("URL: %s " % link)
+                text = "URL: <a href='%s'>%s</a>" % (link, link)
+                #text = "URL: %s" % link
                 p = Paragraph(text, normalStyle)
 
                 imageFilename = self.screenshotFilenameForURL(link)
@@ -232,18 +233,22 @@ class Assessment:
 
 ##### COMMAND LINE
 def go():
+    defaultConfig = 'config.yaml'
+
     parser = OptionParser()
-    parser.add_option("-c", "--config", dest="config",
-                      help="Configuration file", default='config.yaml')
     (options, args) = parser.parse_args()
 
-    printHelp()
+    if len(args) < 1:
+        printHelp()
+        print("Using default config file %s" % defaultConfig)
+        args = [defaultConfig]
 
-    assessment = Assessment(options.config)
-    assessment.doItAll()
+    for config in args:
+        assessment = Assessment(config)
+        assessment.doItAll()
 
 def printHelp():
-    print("caarnage.py -c config.yml")
+    print("caarnage.py config.yml")
     print()
     print("Edit the default config file config.yml to set the report options")
 
