@@ -186,11 +186,26 @@ def testSmallReport():
 def testMediumReport():
     print("Testing medium report")
     assessment = Assessment()
+    assessment.title = "Assessments for Assignment 1"
+    assessment.description = "Examples of the websites submitted for Assignment 1 follow, with URLs to the sites and screenshots."
     assessment.reportFilename = 'mediumreport.pdf'
-    assessment.highLinks.append('https://lucychoi1215.github.io/')
-    assessment.highLinks.append('https://lucychoi1215.github.io/actors.html')
-    assessment.mediumLinks.append('https://tobbi74.github.io/')
-    assessment.lowLinks.append('http://zharmakhan-zn.github.io/')
+    assessment.highLinks.extend([
+        'https://lucychoi1215.github.io/',
+        'https://lucychoi1215.github.io/actors.html',
+        'https://lucychoi1215.github.io/about.html'
+    ])
+
+    assessment.mediumLinks.extend([
+        'https://martapienkosz.github.io/30mff/',
+        'https://martapienkosz.github.io/30mff/#about',
+        'https://martapienkosz.github.io/30mff/#actors'
+    ])
+
+    assessment.lowLinks.extend([
+        'http://zharmakhan-zn.github.io/',
+        'https://zharmakhan-zn.github.io/video.html',
+        'https://zharmakhan-zn.github.io/crew.html'
+    ])
 
     assessment.getAllScreenshots()
     assessment.buildReport()
