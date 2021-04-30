@@ -76,7 +76,8 @@ class Assessment:
         print("Generating report to %s" % self.reportFilename)
         doc = SimpleDocTemplate(self.reportFilename)
         Story = [Spacer(1,2*inch)]
-        style = reportlab.lib.styles.getSampleStyleSheet()["Normal"]
+        headingStyle = reportlab.lib.styles.getSampleStyleSheet()["Heading1"]
+        normalStyle = reportlab.lib.styles.getSampleStyleSheet()["Normal"]
 
         sections = [
             ["High Achievement Examples", self.highLinks],
@@ -85,12 +86,17 @@ class Assessment:
         ]
 
         for description,links in sections:
-            p = Paragraph(description, style)
+            if len(links) < 1:
+                print("  No links in section: %s" % description)
+                continue
+
+            p = Paragraph(description, headingStyle)
+            Story.append(p)
 
             for link in links:
                 print("Adding link %s" % link)
                 text = ("URL: %s. " % link)
-                p = Paragraph(text, style)
+                p = Paragraph(text, normalStyle)
                 Story.append(p)
                 Story.append(Spacer(1,0.2*inch))
 
@@ -106,6 +112,7 @@ class Assessment:
         print("  Saved report to %s" % self.reportFilename)
 
     def reportTitlePage(self, canvas, doc):
+        print("Making title page")
         canvas.saveState()
         canvas.setFont('Times-Bold',16)
         canvas.drawCentredString(self.reportPageWidth/2.0, self.reportPageHeight-108, self.title)
@@ -114,6 +121,7 @@ class Assessment:
         canvas.restoreState()
 
     def reportPage(self, canvas, doc):
+        print("Making page %d" % doc.page)
         canvas.saveState()
         canvas.setFont('Times-Roman', 9)
         canvas.drawString(inch, 0.75 * inch,"Page %d" % (doc.page))
