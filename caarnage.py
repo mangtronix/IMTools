@@ -39,6 +39,8 @@ class Assessment:
         self.lowLinks = []
 
         self._browser = None
+        self.screenshotWidth = 1920
+        self.screenshotHeight = 1200
 
         # Report settings
         self.reportFilename = 'assessment.pdf'
@@ -58,7 +60,10 @@ class Assessment:
             self._browser.quit()
 
         print("Initializing browser")
-        self._browser = webdriver.Firefox()
+        opts = webdriver.FirefoxOptions()
+        opts.add_argument("--width=%d" % self.screenshotWidth)
+        opts.add_argument("--height=%d" % self.screenshotHeight)
+        self._browser = webdriver.Firefox(options = opts)
 
     def updateFromConfig(self, yamlFilename):
         with open(yamlFilename) as file:
@@ -77,11 +82,16 @@ class Assessment:
                 self.mediumLinks = doc
             elif item == 'low':
                 self.lowLinks = doc
+            elif item == 'screenshot_width':
+                self.screenshotWidth = doc
+            elif item == 'screenshot_height':
+                self.screenshotHeight = doc
 
     def printConfig(self):
         print("Title: " + self.title)
         print("Description: " + self.description)
         print("Filename: " + self.reportFilename)
+        print("Screenshot size: %dx%d" % (self.screenshotWidth, self.screenshotHeight))
         print("High Achievement URLs:")
         for url in self.highLinks:
             print("  %s" % url)

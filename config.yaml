@@ -5,6 +5,10 @@ description: Examples of the submitted webpages follow
 # Output filename
 filename: assessment1.pdf
 
+# Screenshot size
+screenshot_width: 1920
+screenshot_height: 1200
+
 # List of high achivement URLs
 high:
   - https://lucychoi1215.github.io/
