@@ -134,7 +134,7 @@ class Assessment:
     def buildReport(self):
         print("Generating report to %s" % self.reportFilename)
         doc = SimpleDocTemplate(self.reportFilename)
-        Story = [Spacer(1,2*inch)]
+        Story = [Spacer(1,1*inch)]
         headingStyle = reportlab.lib.styles.getSampleStyleSheet()["Heading1"]
         normalStyle = reportlab.lib.styles.getSampleStyleSheet()["Normal"]
 
@@ -166,7 +166,7 @@ class Assessment:
 
                 imageFilename = self.screenshotFilenameForURL(link)
                 image = Image(imageFilename)
-                image._restrictSize(6 * inch, 4 * inch)
+                image._restrictSize(7 * inch, 5 * inch)
 
                 Story.append(KeepTogether([p, image]))
                 Story.append(Spacer(1,0.2*inch))
