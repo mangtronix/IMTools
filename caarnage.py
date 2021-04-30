@@ -34,8 +34,13 @@ class Assessment:
         self.title = 'Assessment'
         self.description = 'Assessment description'
 
+        self.highDescription = ''
         self.highLinks = []
+
+        self.mediumDescription = ''
         self.mediumLinks = []
+
+        self.lowDescription = ''
         self.lowLinks = []
 
         self._browser = None
@@ -84,6 +89,12 @@ class Assessment:
                 self.mediumLinks = doc
             elif item == 'low':
                 self.lowLinks = doc
+            elif item == 'high_description':
+                self.highDescription = doc
+            elif item == 'medium_description':
+                self.mediumDescription = doc
+            elif item == 'low_description':
+                self.lowDescription = doc
             elif item == 'screenshot_width':
                 self.screenshotWidth = doc
             elif item == 'screenshot_height':
@@ -94,12 +105,18 @@ class Assessment:
         print("Description: " + self.description)
         print("Filename: " + self.reportFilename)
         print("Screenshot size: %dx%d" % (self.screenshotWidth, self.screenshotHeight))
+        print("High description: %s" % self.highDescription)
+
         print("High Achievement URLs:")
         for url in self.highLinks:
             print("  %s" % url)
+
+        print("Medium description: %s" % self.mediumDescription)
         print("Medium Achievement URLs:")
         for url in self.mediumLinks:
             print("  %s" % url)
+
+        print("Low description: %s" % self.lowDescription)
         print("Low Achievement URLs:")
         for url in self.lowLinks:
             print("  %s" % url)
@@ -151,9 +168,9 @@ class Assessment:
         normalStyle = reportlab.lib.styles.getSampleStyleSheet()["Normal"]
 
         sections = [
-            ["High Achievement Examples", self.highLinks],
-            ["Medium Achievement Examples", self.mediumLinks],
-            ["Low Achievement Examples", self.lowLinks]
+            ["High Achievement Examples", self.highLinks, self.highDescription],
+            ["Medium Achievement Examples", self.mediumLinks, self.mediumDescription],
+            ["Low Achievement Examples", self.lowLinks, self.lowDescription]
         ]
 
         p = Paragraph(self.title, headingStyle)
@@ -163,13 +180,18 @@ class Assessment:
         Story.append(PageBreak())
 
 
-        for description,links in sections:
+        for title,links,description in sections:
             if len(links) < 1:
                 print("  No links in section: %s" % description)
                 continue
 
-            p = Paragraph(description, headingStyle)
+            p = Paragraph(title, headingStyle)
             Story.append(p)
+
+            if description:
+                p = Paragraph(description, normalStyle)
+                Story.append(p)
+                Story.append(Spacer(1,0.25*inch))
 
             for link in links:
                 print("Adding link %s" % link)

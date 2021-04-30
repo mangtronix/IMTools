@@ -9,15 +9,19 @@ filename: assessment1.pdf
 screenshot_width: 1920
 screenshot_height: 1200
 
+# Description is optional
+high_description: These projects show high achievement
 # List of high achivement URLs
 high:
   - https://lucychoi1215.github.io/
   - https://yegormos.github.io/index.html
 
+medium_description:
 # Medium achievement URLs
 medium:
   - https://github.com/NYUAD-IM/Software-Art-Image/tree/main/code/velocity
 
+low_description: Missing project documentation also results in low achievement.
 # Low achievement URls
 low:
   - https://github.com/NYUAD-IM/Software-Art-Image/tree/main/code/simpletimeline
