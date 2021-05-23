@@ -6,6 +6,9 @@ CAaRnage can generate a PDF that contains example work from a list of URLs.
 
 To set the report options, edit ```config.yaml```. Then run ```caarnage.py```.
 
-You need geckodriver, e.g. from conda-forge or homebrew
+To install the required Python modules using Conda
 
-```$ conda install -c conda-forge geckodriver```
+```
+$ conda config --append channels conda-forge
+$ conda install --file requirements.txt
+```

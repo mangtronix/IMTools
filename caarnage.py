@@ -13,6 +13,10 @@
 # - reportlab
 # - platypus
 
+# To install the dependencies using Conda
+# $ conda config --append channels conda-forge
+# $ conda install --file requirements.txt
+
 # TODO:
 # - add option to save page to pdf (https://stackoverflow.com/questions/59893671/pdf-printing-from-selenium-with-chromedriver)
 # - clone GitHub repositories
