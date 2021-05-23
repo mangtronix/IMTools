@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 # Generate an assessment report for CAaR
 # Michael Ang
@@ -12,6 +12,10 @@
 # - geckodriver
 # - reportlab
 # - platypus
+
+# TODO:
+# - add option to save page to pdf (https://stackoverflow.com/questions/59893671/pdf-printing-from-selenium-with-chromedriver)
+# - clone GitHub repositories
 
 from selenium import webdriver
 
