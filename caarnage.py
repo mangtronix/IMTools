@@ -152,10 +152,13 @@ class Assessment:
         '''Retrieve screenshots for all links'''
         print("Getting screenshots")
         for url in self.highLinks + self.mediumLinks + self.lowLinks:
+            if url is None:
+                print("  Empty URL, skipping")
+                continue
             filename = self.screenshotFilenameForURL(url)
             if useCached:
                 if self.fileHasData(filename):
-                    print("  Already have screenshot for %s, skipping"  % url)
+                    print("  Already have screenshot for %s, using cached version"  % url)
                     continue
             self.makeScreenshot(url, self.screenshotFilenameForURL(url))
 
@@ -202,6 +205,8 @@ class Assessment:
                 Story.append(Spacer(1,0.25*inch))
 
             for link in links:
+                if link is None:
+                    continue
                 print("Adding link %s" % link)
                 text = "URL: <a href='%s'>%s</a>" % (link, link)
                 #text = "URL: %s" % link
