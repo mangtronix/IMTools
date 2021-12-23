@@ -270,7 +270,9 @@ class Assessment:
 def go():
     defaultConfig = 'config.yaml'
 
-    parser = OptionParser()
+    usage = "usage: %prog config1.yaml config2.yaml ..."
+
+    parser = OptionParser(usage=usage)
     (options, args) = parser.parse_args()
 
     if len(args) < 1:
