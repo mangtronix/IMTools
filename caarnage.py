@@ -81,6 +81,10 @@ class Assessment:
         self._browser.implicitly_wait(self._browserWaitTime)
 
     def updateFromConfig(self, yamlFilename):
+        if not os.path.exists(yamlFilename):
+            print("Couldn't find config file {}".format(yamlFilename))
+            sys.exit(-1)
+
         with open(yamlFilename) as file:
             documents = yaml.full_load(file)
 
