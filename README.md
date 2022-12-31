@@ -13,6 +13,30 @@ $ conda config --append channels conda-forge
 $ conda install --file requirements.txt
 ```
 
+I make a new config file for each assessment. Here's an example file:
+example.yaml
+```
+title: Assessment 1 - Webpage Assignment
+description: Examples of the submitted webpages follow
+filename: example.pdf
+high:
+  - https://lucychoi1215.github.io/
+medium:
+  - https://github.com/NYUAD-IM/Software-Art-Image/tree/main/code/velocity
+low:
+  - https://github.com/NYUAD-IM/Software-Art-Image/tree/main/code/simpletimeline
+  - https://github.com/NYUAD-IM/Software-Art-Image/tree/main/code/grid
+```
+
+Then run CAaRnage like so:
+```
+$ ./caarnage example.yaml
+```
+
+
+
+
+
 ## Making a PDF of a GitHub repository
 
 Because the CAaR system won't accept a zip file.
