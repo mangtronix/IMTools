@@ -2,6 +2,8 @@
 
 # From https://medium.com/@nikitatonkoshkur25/create-pdf-from-webpage-in-python-1e9603d6a430
 #
+# Modified to scroll through page to trigger Wordpress lazy load
+#
 # To install libraries:
 # $ pip install webdriver-manager selenium
 
@@ -40,13 +42,46 @@ class PdfGenerator:
         self.urls = urls
 
     def _get_pdf_from_url(self, url, *args, **kwargs):
+        # self.driver.implicitly_wait(10)
         self.driver.get(url)
-
-        time.sleep(0.3)  # allow the page to load, increase if needed
+        #time.sleep(5) # Let page HTML load
+        self._scroll_page()
+        time.sleep(10)  # allow the page to load, increase if needed
 
         print_options = self.print_options.copy()
         result = self._send_devtools(self.driver, "Page.printToPDF", print_options)
         return base64.b64decode(result['data'])
+
+
+    '''Scroll page to trigger lazy load images'''
+    def _scroll_page(self):
+        # Adapted rom https://stackoverflow.com/questions/62600288/how-to-handle-lazy-loaded-images-in-selenium
+        print("PdfGenerator: scrolling page")
+        SCROLL_PAUSE_TIME = 0.5
+        i = 0
+        last_height = self.driver.execute_script("return document.body.scrollHeight")
+        window_height = self.driver.execute_script("return window.innerHeight");
+
+        # Step through whole page
+        print("PDF: scrolling through page")
+        current_position = 0
+        step = window_height * 0.9 # Step by 90% of window height
+        while current_position < last_height:
+            self.driver.execute_script("window.scrollTo(0, %d);" % current_position);
+            print('.')
+            current_position += step
+            time.sleep(SCROLL_PAUSE_TIME);
+
+        while True:
+            self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            time.sleep(SCROLL_PAUSE_TIME)
+            new_height = self.driver.execute_script("return document.body.scrollHeight")
+            if new_height == last_height:
+                break
+            last_height = new_height
+            i += 1
+            if i == 5:
+                break
 
     @staticmethod
     def _send_devtools(driver, cmd, params):
@@ -73,7 +108,7 @@ class PdfGenerator:
 
     def main(self) -> List[BytesIO]:
         webdriver_options = ChromeOptions()
-        webdriver_options.add_argument('--headless')
+        # webdriver_options.add_argument('--headless')
         webdriver_options.add_argument('--disable-gpu')
 
         try:
