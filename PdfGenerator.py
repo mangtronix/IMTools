@@ -31,11 +31,13 @@ class PdfGenerator:
     # https://chromedevtools.github.io/devtools-protocol/tot/Page#method-printToPDF
     print_options = {
         'landscape': False,
-        'displayHeaderFooter': False,
+        'displayHeaderFooter': True,
         'printBackground': True,
         'preferCSSPageSize': True,
-        'paperWidth': 6.97,
-        'paperHeight': 16.5,
+
+        # A4 paper size
+        'paperWidth': 8.27,
+        'paperHeight': 11.69,
     }
 
     def __init__(self, urls: List[str]):
@@ -68,9 +70,8 @@ class PdfGenerator:
         step = window_height * 0.9 # Step by 90% of window height
         while current_position < last_height:
             self.driver.execute_script("window.scrollTo(0, %d);" % current_position);
-            print('.')
             current_position += step
-            time.sleep(SCROLL_PAUSE_TIME);
+            time.sleep(0.1);
 
         while True:
             self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
