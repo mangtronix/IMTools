@@ -49,5 +49,7 @@ Install code2pdf
 * https://github.com/lucascaton/code2pdf
 * ```$ gem install code2pdf```
 
+Download your GitHub repository as a Zip file and decompress
+
 Generate pdf
 * ```$ code2pdf {repo directory}```
